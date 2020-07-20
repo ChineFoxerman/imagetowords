@@ -27,7 +27,7 @@ class Ghs:
         img = cv2.imread(self.image)
         height, width, channel = img.shape
         nb = 0
-        fontstyle = ImageFont.truetype("../fonts/simsun.ttc", 5 * reduce_px, encoding="utf-8")
+        fontstyle = ImageFont.truetype("../fonts/simsun.ttc", reduce_px, encoding="utf-8")
         (w, h) = fontstyle.getsize(self.txt[nb % len(self.txt)])
         canvas = np.ones((height, width, 3), dtype="uint8")
         canvas[:] = (255, 255, 255)
@@ -35,9 +35,9 @@ class Ghs:
         draw = ImageDraw.Draw(canvas)
         for i in range(int(height/(h+gap))):
             for j in range(int(width/(w+gap))):
-                [R, G, B] = img[i * (h + gap) + int(h/2), j * (w + gap) + int(w/2)]
+                [B, G, R] = img[i * (h + gap) + int(h/2), j * (w + gap) + int(w/2)]
                 draw.text((j*(w+gap), i*(h+gap)), self.txt[nb % len(self.txt)],
-                          (B, G, R), fontstyle)
+                          (R, G, B), fontstyle)
                 # cv2.putText(canvas, text=self.txt[nb % len(self.txt)], org=(j*10, i*10),
                             # fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, thickness=1, lineType=cv2.LINE_AA,
                             # color=(int(color[i][j][0]), int(color[i][j][1]), int(color[i][j][2])))
@@ -59,14 +59,14 @@ def SavePathCallBack():
     reduce_px = scale_input.get()
     gap = gap_input.get()
     save = filedialog.asksaveasfilename(initialdir="/", filetypes=(("jpeg files", "*.jpg"), ("all files", "*.*")))
-    if save and entry_text.get() and image_path and scale_input.get() in range(1, 21) and gap_input.get() in range(1, 11):
+    if save and entry_text.get() and image_path and scale_input.get() in range(1, 21) and gap_input.get() in range(0, 11):
         ghs = Ghs(image_path, entry_text.get(), save)
         ghs.start()
         print(save)
         messagebox.showinfo("成功", "转换完成")
     elif not (scale_input.get() in range(1, 21)):
         messagebox.showerror("错误", "请输入正确的倍数")
-    elif not (gap_input.get() in range(1, 11)):
+    elif not (gap_input.get() in range(0, 11)):
         messagebox.showerror("错误", "请输入字间距")
 
 
@@ -75,15 +75,15 @@ if __name__ == '__main__':
     b = tkinter.Button(top, text="图片文件", command=ImageCallBack)
     entry_text = StringVar()
     textbox = Entry(top, textvariable=entry_text)
-    entry_text.set('abc')
+    entry_text.set('南无阿弥陀佛')
 
     scale_input = IntVar()
     scale_box = Entry(top, textvariable=scale_input)
-    scale_input.set(6)
+    scale_input.set(5)
 
     gap_input = IntVar()
     gap_box = Entry(top, textvariable=gap_input)
-    gap_input.set(5)
+    gap_input.set(0)
 
     b2 = tkinter.Button(top, text="开始转换", command=SavePathCallBack)
     b.pack()
